@@ -4,7 +4,6 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/chess:chess:uqbar/',
   plugins: [
     react(),
     mkcert(),
@@ -37,22 +36,5 @@ export default defineConfig({
   },
   server: {
     https: false,
-    proxy: {
-      "/encryptor:sys:uqbar": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      "/qns_indexer:qns_indexer:uqbar/node": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      "/chess:chess:uqbar/games": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
   },
 })

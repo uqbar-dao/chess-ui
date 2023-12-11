@@ -30,10 +30,10 @@ function App() {
   useEffect(() => {
     if (!inited) {
       inited = true
-      new UqbarEncryptorApi({ nodeId: window.our.node, channelId: window.our.process, onMessage: handleWsMessage })
+      new UqbarEncryptorApi({ nodeId: window.our.node, processId: window.our.process, onMessage: handleWsMessage })
     }
 
-    fetch('/chess:chess:uqbar/games').then(res => res.json()).then((games) => {
+    fetch(`/${window.our.process}/games`).then(res => res.json()).then((games) => {
       set({ games })
     }).catch(console.error)
 
@@ -42,7 +42,7 @@ function App() {
   const startNewGame = useCallback(async (e: FormEvent) => {
     e.preventDefault()
     try {
-      const createdGame = await fetch('/chess:chess:uqbar/games', {
+      const createdGame = await fetch(`/${window.our.process}/games`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ function App() {
     allGames[game.id] = gameCopy
     set({ games: allGames })
 
-    fetch('/chess:chess:uqbar/games', {
+    fetch(`/${window.our.process}/games`, {
       method: 'PUT',
       body: JSON.stringify({ id: game.id, move: sourceSquare + targetSquare })
     }).then(r => r.json())
@@ -130,7 +130,7 @@ function App() {
 
     if (!window.confirm('Are you sure you want to resign this game?')) return
 
-    fetch(`/chess:chess:uqbar/games?id=${game.id}`, {
+    fetch(`/${window.our.process}/games?id=${game.id}`, {
       method: 'DELETE',
     }).then(r => r.json())
     .then((updatedGame) => {
@@ -150,7 +150,7 @@ function App() {
     if (!game) return
 
     try {
-      const createdGame = await fetch('/chess:chess:uqbar/games', {
+      const createdGame = await fetch(`/${window.our.process}/games`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ function App() {
   return (
     <div className='flex flex-col justify-center items-center'>
       <div className='flex flex-col justify-center' style={{ maxHeight: '100vh', maxWidth: '800px', width: '100%', position: 'relative' }}>
-        <a href="/" className='absolute top-6 left-0 m-4' style={{ fontSize: 24, color: 'white' }} onClick={e => { e.preventDefault(); window.history.back() }}>
+        <a href="/" className='absolute top-6 left-0 m-4' style={{ fontSize: 24, color: 'white' }} onClick={e => { e.preventDefault(); window.location.origin }}>
           &#x25c0; Back
         </a>
         <h1 className='m-4'>Chess by Uqbar</h1>
