@@ -42,7 +42,7 @@ export default class UqbarEncryptorApi {
   constructor({
     nodeId,
     processId,
-    uri = 'ws://' + window.location.host,
+    uri = 'ws://' + window.location.host + window.location.pathname,
     onMessage = () => null,
     onOpen = () => null,
     onClose = () => null,
@@ -74,12 +74,6 @@ export default class UqbarEncryptorApi {
     this._ws.onopen = (ev: Event) => {
       // Register this API instance with the server
       console.log(`${nodeId}`, getCookie(`uqbar-auth_${nodeId}`), getCookie(`uqbar-ws-auth_${nodeId}`))
-      this._ws.send(stringifyAndEncode({
-        auth_token: getCookie(`uqbar-auth_${nodeId}`),
-        target_process: processId,
-        encrypted: false,
-      }))
-
       onOpen(ev)
     }
     this._ws.onclose = onClose
